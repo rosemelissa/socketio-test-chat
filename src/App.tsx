@@ -16,46 +16,48 @@ function App(): JSX.Element {
     console.log(socket.connected); // true
   });
 
- 
-
   useEffect(() => {
     const getAllMessages = async () => {
       try {
         const allMessages = await axios.get("http://localhost:4000/all");
-        console.log(allMessages.data)
+        console.log(allMessages.data);
       } catch (error) {
         console.error(error);
       }
-    }
+    };
     getAllMessages();
 
     socket.on("messages updated", (updatedMessages) => {
       setMessages(updatedMessages.allMessages);
-    })
+    });
     return () => {
       socket.off("messages updated");
     };
-  }, [])
+  }, []);
 
   const handleSubmit = async () => {
-    await axios.post("http://localhost:4000/message", { message: currentMessage})
-    setCurrentMessage("")
-  }
+    await axios.post("http://localhost:4000/message", {
+      message: currentMessage,
+    });
+    setCurrentMessage("");
+  };
 
   return (
     <>
-    <input type="text" value={currentMessage} onChange={(e) => setCurrentMessage(e.target.value)}/>
-    <button onClick={handleSubmit}>Submit</button>
-    <h1>Messages:</h1>
-    <ul>
-      {messages.map((message) => {
-        return(
-      <li key={message.id}>{message.message}</li>)
-    })}
-    </ul>
-    
-  </>)
-  ;
+      <input
+        type="text"
+        value={currentMessage}
+        onChange={(e) => setCurrentMessage(e.target.value)}
+      />
+      <button onClick={handleSubmit}>Submit</button>
+      <h1>Messages:</h1>
+      <ul>
+        {messages.map((message) => {
+          return <li key={message.id}>{message.message}</li>;
+        })}
+      </ul>
+    </>
+  );
 }
 
 export default App;
